@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clothing : Create Account</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.18/js/jquery.dataTables.js"></script>
+    <link rel="stylesheet" href="css/signup.css">
+
+</head>
+<body>
+    
+    <img src="img/loader.gif" class="loader" alt="">
+
+    <div class="alert-box">
+        <img src="img/error.png" class="alert-img" alt="">
+        <p class="alert-msg">Error message</p>
+    </div>
+
+    <div class="container">
+        <img src="img/dark-logo.png" class="logo" alt="">
+<!--        <h2 style="color: #1e7e34" id="status"></h2>-->
+        <div>
+            <input type="text" autocomplete="off" id="name" placeholder="name">
+            <input type="text" autocomplete="off" id="username" placeholder="username">
+            <input type="email" autocomplete="off" id="email" placeholder="email">
+            <input type="password" autocomplete="off" id="password" placeholder="password">
+            <input type="text" autocomplete="off" id="number" placeholder="phone number">
+            <input type="checkbox" checked class="checkbox" id="terms-and-cond">
+            <label for="terms-and-cond">agree to our <a href="">terms and conditions</a></label>
+            <br>
+            <input type="checkbox" class="checkbox" id="notification">
+            <label for="notification">recieve upcoming offers and events mails</a></label>
+            <button class="submit-btn" id="submit-btn">create account</button>
+        </div>
+        <a href="/login" class="link">already have an account? Log in here</a>
+    </div>
+
+    <script src="js/token.js"></script>
+    <script src="js/form.js"></script>
+    <script>
+        $(document).ready(function (){
+            let signUpForm = {};
+            let noUser = {
+                message: "no_user"
+            }
+            let noEmail = {
+                message: "no_email"
+            }
+            let createSuccess = {
+                message: "yes"
+            }
+            $('#submit-btn').click(function (){
+                signUpForm.name = $('#name').val();
+                signUpForm.username = $('#username').val();
+                signUpForm.email = $('#email').val();
+                signUpForm.password = $('#password').val();
+                signUpForm.roles = ["admin"];
+                signUpForm.phone=$('#number').val();
+                let signUpFormOBJ = JSON.stringify(signUpForm);
+                console.log('signUpFormOBJ === ',signUpFormOBJ)
+                $.ajax({
+                    url: 'http://localhost:8080/signup',
+                    method: 'POST',
+                    data: signUpFormOBJ,
+                    contentType: 'application/json; charset=utf8',
+                    success: function (data){
+                        console.log('data ===', data);
+                        if(JSON.stringify(data)==JSON.stringify(noUser)){
+                            document.getElementById('status').innerHTML = 'The username is existed! Please try again!'
+                            showAlert('The username is existed! Please try again!')
+                        }
+                        if(JSON.stringify(data)==JSON.stringify(noEmail)){
+                            document.getElementById('status').innerHTML = 'The Email is existed! Please try again!'
+                            showAlert('The Email is existed! Please try again!')
+                        }
+                        if(JSON.stringify(data)==JSON.stringify(createSuccess)){
+                            // alert('Create User Account Success! Please check mail verify account!')
+                            alert("Create User Account Success! Please check mail verify account!");
+                            window.location="http://localhost:63343/package.json/public/login.html?_ijt=dhvcqd81evcmfqdf5uj4ohcs1l"
+                        }
+                    }
+                })
+            })
+        })
+    </script>
+</body>
+</html>
